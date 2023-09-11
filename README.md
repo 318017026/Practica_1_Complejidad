@@ -3,4 +3,4 @@
 
 > Integrantes:
 - Juan Manuel Lucio Rangel
-- 
+- Victor Rosales
