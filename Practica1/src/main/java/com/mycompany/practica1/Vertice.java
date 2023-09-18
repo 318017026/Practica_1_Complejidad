@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Vertice{
     
-    private ArrayList vecinos = new ArrayList<>();
+    private ArrayList<Integer> vecinos = new ArrayList<>();
     private String nombre = " ";
 
     /**
@@ -24,7 +24,7 @@ public class Vertice{
     * @param nombre .- Nombre que se le asignara al vertice
     * @param vecinos .- Vecinos del vertice
     */
-    public Vertice(String nombre, ArrayList vecinos){
+    public Vertice(String nombre, ArrayList<Integer> vecinos){
       this.setNombre(nombre);
       this.setVecinos(vecinos);
       
@@ -36,7 +36,7 @@ public class Vertice{
     * Metodo setVecinos.- Asigna los vecinos del vertice
     * @param vecinos
     */
-    private void setVecinos(ArrayList vecinos) {
+    private void setVecinos(ArrayList<Integer> vecinos) {
         this.vecinos = vecinos;
     }
 
@@ -52,7 +52,7 @@ public class Vertice{
     * Metodo getVecinos.- Regresa la lista de vecinos del vertice
     * @return Vecinos
     */
-    public ArrayList getVecinos() {
+    public ArrayList<Integer> getVecinos() {
         return vecinos;
     }
 
