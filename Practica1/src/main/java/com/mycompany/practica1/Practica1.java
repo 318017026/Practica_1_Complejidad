@@ -1,103 +1,92 @@
-
 package com.mycompany.practica1;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
-/**
- * Complejidad Computacional 2024-1
- * Profesor: Oscar Hernández Constantino	
- * Ayudante: Malinali Gónzalez Lara
- * 
- * Practica 1 - Menu principal
- * 
- * @author Juan Manuel Lucio Rangel
- * @author Victor Rosales
- * @version 2.1
- *
- */
-public class Practica1{
+import java.io.*;
+import java.util.*;
 
-    Grafica G;
-    int minimo;
-    
-    /**
-    * Metodo main.- Muestra el menu principal que nos permite crear la grafica
-    * y resolver el problema de ruta inducida.
-    * @param args .- Nombre del archivo .txt con los datos de la grafica
-    */
+public class Practica1 {
+
     public static void main(String[] args) {
-        
-        Practica1 M = new Practica1();
-        
-        if (args.length == 0){
-            args = new String[]{"Prueba.txt"};
-        }
-        
-        if (args.length != 1){
-            System.out.println("Uso incorrecto. Debes proporcionar el nombre del archivo .txt.");
+        if (args.length != 2) {
+            System.out.println("Uso: java Practica1 archivoEntrada archivoSalida");
             return;
         }
 
-        String nombreArchivo = args[0];
-        String datos = "";
+        String archivoEntrada = args[0];
+        String archivoSalida = args[1];
 
-        try(BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))){
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                datos += linea + "\n";
+        try {
+            List<String> grafo = leerArchivo(archivoEntrada);
+            int numVertices = grafo.size()-1;
+            int[][] matrizAdyacencia = crearMatrizAdyacencia(grafo, numVertices);
+
+            escribirArchivoSalida(matrizAdyacencia, numVertices, archivoSalida);
+
+            System.out.println("Archivo de salida creado con éxito.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<String> leerArchivo(String archivoEntrada) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(archivoEntrada));
+        List<String> grafo = new ArrayList<>();
+        String linea;
+
+        while ((linea = br.readLine()) != null) {
+            grafo.add(linea);
+        }
+        br.close();
+
+        return grafo;
+    }
+
+    private static int[][] crearMatrizAdyacencia(List<String> grafo, int numVertices) {
+        int[][] matrizAdyacencia = new int[numVertices][numVertices];
+
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                matrizAdyacencia[i][j] = 0; // Inicializar todas las celdas en 0
             }
-        }catch (IOException e){
-            System.err.println("Error al leer el archivo: " + e.getMessage());
-            return;
         }
 
-        String[] lineas = datos.split("\n");
-              
-        M.crearGrafica(lineas);
+        int numAristas = 0;
+
+        for (String linea : grafo) {
+            if (linea.startsWith("k: ")) {
+                String[] partes = linea.split(": ");
+
+                int k = Integer.parseInt(partes[1]);
+            }else{
+                String vertice = linea.trim().replace("[", "").replace("]", "").replace("(", "");
+                vertice = vertice.substring(0, vertice.length() - 1);
+                String[] partes = vertice.split(": ");
+                String[] adyacencias = partes[1].split("\\),");
+
+                for (String adyacencia : adyacencias) {
+                    String[] vertices = adyacencia.split(",");
+                    int v1 = Integer.parseInt(vertices[0]);
+                    int v2 = Integer.parseInt(vertices[1]);
+                    matrizAdyacencia[v1 - 1][v2 - 1] = 1;
+                    matrizAdyacencia[v2 - 1][v1 - 1] = 1;
+                    numAristas++;
+                }
+            }
+        }
+
+        System.out.println("Número de aristas: " + numAristas / 2);
+        return matrizAdyacencia;
     }
 
-    /**
-    * Metodo crearGrafica .- Recibe los datos de la grafica para crearla.
-    * @param lineas .- Datos de la grafica
-    */
-    private void crearGrafica(String[] lineas){
-        
-        String[] aux = lineas[0].split(" ");
-        this.minimo = Integer.parseInt(aux[aux.length-1]);
-        
-        // Comprobacion de que los valores son correctos, QUITARLO EN LA VERSION FINAL
-        System.out.println(this.minimo);
-        
-        aux = lineas[1].split(" ");
-        int numVertices = Integer.parseInt(aux[aux.length-1]);
-        
-        // Comprobacion de que los valores son correctos, QUITARLO EN LA VERSION FINAL
-        System.out.println(numVertices);
-        
-        String[] datos = this.datosVertices(lineas);
-        
-        // Comprobacion de que los valores son correctos, QUITARLO EN LA VERSION FINAL
-        for(int i  = 0; i < datos.length; i++){
-            System.out.println(datos[i]);
+    private static void escribirArchivoSalida(int[][] matrizAdyacencia, int numVertices, String archivoSalida) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(archivoSalida));
+        bw.write("k: " + matrizAdyacencia.length + "\n");
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                bw.write(matrizAdyacencia[i][j] + " ");
+            }
+            bw.write("\n");
         }
-        
-        G = new Grafica(numVertices, datos);
-    }
-
-    /**
-    * Metodo datosVertices .- Obtiene los datos correspondientes de los vertices.
-    * @param lineas .- Datos de la grafica
-    */
-    private String[] datosVertices(String[] lineas) {
-        String[] s = new String[lineas.length - 2];
-        int j = 0;
-        
-        for(int i = 2; i<lineas.length; i++){
-            s[j] = lineas[i];
-            j++;
-        }
-        
-        return s;
+        bw.write("Número de vértices: " + numVertices + "\n");
+        bw.close();
     }
 }
