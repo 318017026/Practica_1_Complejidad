@@ -21,7 +21,6 @@ public class Practica1 {
 
             escribirArchivoSalida(matrizAdyacencia, numVertices, archivoSalida);
 
-            System.out.println("Archivo de salida creado con éxito.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,6 +41,7 @@ public class Practica1 {
 
     private static int[][] crearMatrizAdyacencia(List<String> grafo, int numVertices) {
         int[][] matrizAdyacencia = new int[numVertices][numVertices];
+        int k = -1;
 
         for (int i = 0; i < numVertices; i++) {
             for (int j = 0; j < numVertices; j++) {
@@ -55,7 +55,7 @@ public class Practica1 {
             if (linea.startsWith("k: ")) {
                 String[] partes = linea.split(": ");
 
-                int k = Integer.parseInt(partes[1]);
+                k = Integer.parseInt(partes[1]);
             }else{
                 String vertice = linea.trim().replace("[", "").replace("]", "").replace("(", "");
                 vertice = vertice.substring(0, vertice.length() - 1);
@@ -74,19 +74,19 @@ public class Practica1 {
         }
 
         System.out.println("Número de aristas: " + numAristas / 2);
+        System.out.println("Número de vértices: " + numVertices);
+        System.out.println("k: " + k);
         return matrizAdyacencia;
     }
 
     private static void escribirArchivoSalida(int[][] matrizAdyacencia, int numVertices, String archivoSalida) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(archivoSalida));
-        bw.write("k: " + matrizAdyacencia.length + "\n");
         for (int i = 0; i < numVertices; i++) {
             for (int j = 0; j < numVertices; j++) {
                 bw.write(matrizAdyacencia[i][j] + " ");
             }
             bw.write("\n");
         }
-        bw.write("Número de vértices: " + numVertices + "\n");
         bw.close();
     }
 }
