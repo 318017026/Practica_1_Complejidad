@@ -3,13 +3,11 @@
 
 > Integrantes:
 - Juan Manuel Lucio Rangel
-- Victor Rosales
+- Oscar Emilio Caballero Jim ́enez
 
-Para ejecutar el programa se puede usar el siguiente comando:
-java -jar target/*.jar inputs/(Nombre del atchivo de entrada).txt (Nombre del atchivo de salida).txt
+Para ejecutar el script se puede usar el siguiente comando en la terminal:
+./Script.sh <Dominio o IP>
 
 Un ejemplo de esto es el siguiente:
 
-java -jar target/*.jar inputs/Ejemplo3.txt  ouput.txt
-
-De igual manera se puede utilizar una IDE con Java para ejecutarlo.
+./Script.sh unam.mx
